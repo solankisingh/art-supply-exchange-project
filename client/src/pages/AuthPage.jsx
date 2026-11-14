@@ -47,8 +47,9 @@ export default function AuthPage({ isRegister = false }) {
   };
 
   return (
+    /* TRUE EDGE-TO-EDGE FULL-SCREEN CONTAINER (Negative margins cancel parent layout padding) */
     <div
-      className="w-full min-h-[calc(100vh-140px)] relative flex items-center justify-center py-10 px-4 sm:px-6 bg-cover bg-center bg-no-repeat rounded-2xl overflow-hidden shadow-xl"
+      className="w-full -mx-4 sm:-mx-8 -my-6 min-h-[calc(100vh-115px)] relative flex items-center justify-center py-10 px-4 sm:px-6 bg-cover bg-center bg-no-repeat overflow-hidden"
       style={{ backgroundImage: `url(${authBg})` }}
     >
       {/* Subtle Dark Gradient Overlay across full artistic background */}
@@ -56,7 +57,7 @@ export default function AuthPage({ isRegister = false }) {
 
       {/* Transparent Glassmorphism Card */}
       <div
-        className={`relative z-10 w-full max-w-[460px] bg-[#1e1e23]/55 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-7 sm:p-8 flex flex-col justify-between ${
+        className={`relative z-10 w-full max-w-[460px] bg-[#1e1e23]/60 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-7 sm:p-8 flex flex-col justify-between my-auto ${
           isRegister ? 'min-h-[620px]' : 'min-h-[490px]'
         }`}
       >
