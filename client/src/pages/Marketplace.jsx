@@ -19,22 +19,22 @@ const SLIDESHOW_IMAGES = [
   {
     id: 1,
     title: 'Painting Supplies',
-    url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1600&q=80'
+    url: '/yannis-papanastasopoulos-kKzbyDeb62M-unsplash.jpg'
   },
   {
     id: 2,
     title: 'Drawing Materials',
-    url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=1600&q=80'
+    url: '/Screenshot 2026-11-14 120001.png'
   },
   {
     id: 3,
     title: 'Acrylic Painting Studio',
-    url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1600&q=80'
+    url: '/Screenshot 2026-11-14 120037.png'
   },
   {
     id: 4,
     title: 'Craft & Paper Workspace',
-    url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1600&q=80'
+    url: '/Screenshot 2026-11-14 120110.png'
   }
 ];
 
@@ -101,16 +101,15 @@ export default function Marketplace() {
           HERO BANNER WITH AUTOMATIC BACKGROUND IMAGE SLIDESHOW
       ========================================================================== */}
       <div className="w-full relative rounded-2xl overflow-hidden shadow-xl border border-slate-700/60 h-[400px] sm:h-[420px] lg:h-[450px] flex items-center justify-center bg-slate-900">
-        
+
         {/* Layer 1: Background Images with 1-second crossfade */}
         {SLIDESHOW_IMAGES.map((slide, index) => (
           <img
             key={slide.id}
             src={slide.url}
             alt={slide.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out select-none pointer-events-none ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out select-none pointer-events-none ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
           />
         ))}
 
@@ -119,7 +118,7 @@ export default function Marketplace() {
 
         {/* Layer 3: Completely Stationary Centered Foreground Content */}
         <div className="relative z-10 w-full max-w-4xl px-4 sm:px-8 py-6 flex flex-col items-center justify-center text-center">
-          
+
           {/* Art Palette Icon with small decorative accents */}
           <div className="relative mb-3 flex items-center justify-center">
             <span className="text-emerald-400 text-lg font-bold select-none absolute -left-5 -top-1">
