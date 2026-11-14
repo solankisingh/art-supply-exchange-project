@@ -1,0 +1,22 @@
+{
+  "name": "art-supply-exchange-project",
+  "version": "1.0.0",
+  "description": "Art Supply Exchange and Second-hand Material Marketplace",
+  "main": "server/index.js",
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js",
+    "client": "npm run dev --prefix client",
+    "seed": "node server/seed.js",
+    "build": "cd client && npm run build",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1"
+  }
+}
