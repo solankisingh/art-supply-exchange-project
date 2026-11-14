@@ -19,22 +19,22 @@ const SLIDESHOW_IMAGES = [
   {
     id: 1,
     title: 'Painting Supplies',
-    url: '/yannis-papanastasopoulos-kKzbyDeb62M-unsplash.jpg'
+    url: '/Painting Supplies.jpg'
   },
   {
     id: 2,
     title: 'Drawing Materials',
-    url: '/Screenshot 2026-11-14 120001.png'
+    url: '/Drawing Materials.png'
   },
   {
     id: 3,
     title: 'Acrylic Painting Studio',
-    url: '/Screenshot 2026-11-14 120037.png'
+    url: '/Acrylic Painting Studio.png'
   },
   {
     id: 4,
     title: 'Craft & Paper Workspace',
-    url: '/Screenshot 2026-11-14 120110.png'
+    url: '/Craft & Paper Workspace.png'
   }
 ];
 
