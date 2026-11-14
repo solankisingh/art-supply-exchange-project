@@ -47,9 +47,8 @@ export default function AuthPage({ isRegister = false }) {
   };
 
   return (
-    /* TRUE EDGE-TO-EDGE FULL-SCREEN CONTAINER (Negative margins cancel parent layout padding) */
     <div
-      className="w-full -mx-4 sm:-mx-8 -my-6 min-h-[calc(100vh-115px)] relative flex items-center justify-center py-10 px-4 sm:px-6 bg-cover bg-center bg-no-repeat overflow-hidden"
+      className="w-full flex-1 min-h-[calc(100vh-120px)] relative flex items-center justify-center py-12 px-4 sm:px-6 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${authBg})` }}
     >
       {/* Subtle Dark Gradient Overlay across full artistic background */}
