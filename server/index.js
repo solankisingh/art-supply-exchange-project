@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { readData, writeData, files } from './db.js';
-import { authMiddleware, optionalAuth, adminMiddleware, JWT_SECRET } from './auth.js';
+import { authMiddleware, JWT_SECRET } from './auth.js';
 import { seedDatabase } from './seed.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Auto seed on startup
+// Initialize empty stores safely
 seedDatabase();
 
 // ---------------- AUTH ROUTES ----------------
@@ -35,15 +35,18 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    // The very first registered user becomes admin, others are regular users
+    const isFirstUser = users.length === 0;
+
     const newUser = {
       id: `usr_${Date.now()}`,
-      name,
-      email: email.toLowerCase(),
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
       password: passwordHash,
-      role: 'user',
-      location: location || 'Seattle, WA',
-      bio: bio || 'Art enthusiast and creative community member.',
-      avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(name)}`,
+      role: isFirstUser ? 'admin' : 'user',
+      location: location?.trim() || 'Local Area',
+      bio: bio?.trim() || 'Member of art supply exchange community.',
+      avatar: '',
       createdAt: new Date().toISOString()
     };
 
@@ -60,7 +63,7 @@ app.post('/api/auth/register', async (req, res) => {
     res.status(201).json({ user: userWithoutPass, token });
   } catch (err) {
     console.error('Register error:', err);
-    res.status(500).json({ message: 'Internal server error during registration.' });
+    res.status(500).json({ message: 'Registration failed. Please try again.' });
   }
 });
 
@@ -68,11 +71,11 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required.' });
+      return res.status(400).json({ message: 'Please provide both email and password.' });
     }
 
     const users = readData(files.USERS_FILE, []);
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const user = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
@@ -92,7 +95,7 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({ user: userWithoutPass, token });
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ message: 'Internal server error during login.' });
+    res.status(500).json({ message: 'Login failed. Please try again.' });
   }
 });
 
@@ -100,94 +103,60 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
   const users = readData(files.USERS_FILE, []);
   const user = users.find(u => u.id === req.user.id);
   if (!user) {
-    return res.status(404).json({ message: 'User profile not found.' });
+    return res.status(404).json({ message: 'User not found.' });
   }
   const { password: _, ...userWithoutPass } = user;
-  res.json({ user: userWithoutPass });
-});
-
-// Update Profile
-app.put('/api/auth/profile', authMiddleware, (req, res) => {
-  const { name, location, bio, avatar } = req.body;
-  const users = readData(files.USERS_FILE, []);
-  const idx = users.findIndex(u => u.id === req.user.id);
-  if (idx === -1) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-
-  if (name) users[idx].name = name;
-  if (location) users[idx].location = location;
-  if (bio) users[idx].bio = bio;
-  if (avatar) users[idx].avatar = avatar;
-
-  writeData(files.USERS_FILE, users);
-  const { password: _, ...userWithoutPass } = users[idx];
   res.json({ user: userWithoutPass });
 });
 
 // ---------------- MARKETPLACE & ITEM ROUTES ----------------
 app.get('/api/items', (req, res) => {
   try {
-    const { search, category, condition, location, sort, minPrice, maxPrice } = req.query;
+    const { search, category, condition, location, sort } = req.query;
     let items = readData(files.ITEMS_FILE, []);
     const users = readData(files.USERS_FILE, []);
 
-    // Filter by search query
     if (search) {
       const q = search.toLowerCase();
       items = items.filter(it => 
-        it.title.toLowerCase().includes(q) || 
-        it.description.toLowerCase().includes(q) ||
+        (it.title && it.title.toLowerCase().includes(q)) || 
+        (it.description && it.description.toLowerCase().includes(q)) ||
         (it.swapPreferences && it.swapPreferences.toLowerCase().includes(q))
       );
     }
 
-    // Filter by Category
     if (category && category !== 'All') {
       items = items.filter(it => it.category === category);
     }
 
-    // Filter by Condition
     if (condition && condition !== 'All') {
       items = items.filter(it => it.condition === condition);
     }
 
-    // Filter by Location
     if (location && location !== 'All') {
-      items = items.filter(it => it.location.toLowerCase().includes(location.toLowerCase()));
+      items = items.filter(it => it.location && it.location.toLowerCase().includes(location.toLowerCase()));
     }
 
-    // Filter by Price range
-    if (minPrice) {
-      items = items.filter(it => it.price >= Number(minPrice));
-    }
-    if (maxPrice) {
-      items = items.filter(it => it.price <= Number(maxPrice));
-    }
-
-    // Sort
     if (sort === 'price_asc') {
-      items.sort((a, b) => a.price - b.price);
+      items.sort((a, b) => Number(a.price) - Number(b.price));
     } else if (sort === 'price_desc') {
-      items.sort((a, b) => b.price - a.price);
+      items.sort((a, b) => Number(b.price) - Number(a.price));
     } else {
-      // Default: newest first
       items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
-    // Hydrate with seller summary
     const populated = items.map(item => {
       const seller = users.find(u => u.id === item.sellerId);
       return {
         ...item,
-        seller: seller ? { id: seller.id, name: seller.name, avatar: seller.avatar, location: seller.location } : null
+        seller: seller ? { id: seller.id, name: seller.name, email: seller.email, location: seller.location } : null
       };
     });
 
     res.json(populated);
   } catch (err) {
     console.error('Fetch items error:', err);
-    res.status(500).json({ message: 'Error retrieving items.' });
+    res.status(500).json({ message: 'Error fetching marketplace items.' });
   }
 });
 
@@ -197,41 +166,38 @@ app.get('/api/items/:id', (req, res) => {
   const item = items.find(it => it.id === req.params.id);
 
   if (!item) {
-    return res.status(404).json({ message: 'Art supply listing not found.' });
+    return res.status(404).json({ message: 'Item listing not found.' });
   }
 
   const seller = users.find(u => u.id === item.sellerId);
   res.json({
     ...item,
-    seller: seller ? { id: seller.id, name: seller.name, avatar: seller.avatar, bio: seller.bio, location: seller.location } : null
+    seller: seller ? { id: seller.id, name: seller.name, email: seller.email, bio: seller.bio, location: seller.location } : null
   });
 });
 
 app.post('/api/items', authMiddleware, (req, res) => {
   try {
-    const { title, description, category, condition, price, isSwapAvailable, swapPreferences, location, images } = req.body;
+    const { title, description, category, condition, price, isSwapAvailable, swapPreferences, location, imageUrl } = req.body;
     if (!title || !description || !category || !condition) {
-      return res.status(400).json({ message: 'Please provide all required product details.' });
+      return res.status(400).json({ message: 'Title, description, category, and condition are required.' });
     }
 
     const items = readData(files.ITEMS_FILE, []);
-    const defaultImages = [
-      'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80'
-    ];
 
     const newItem = {
       id: `item_${Date.now()}`,
       sellerId: req.user.id,
-      title,
-      description,
+      title: title.trim(),
+      description: description.trim(),
       category,
       condition,
       price: Number(price) || 0,
       isSwapAvailable: Boolean(isSwapAvailable),
-      swapPreferences: swapPreferences || '',
-      location: location || req.user.location || 'Local Artist Community',
+      swapPreferences: swapPreferences?.trim() || '',
+      location: location?.trim() || req.user.location || 'Local',
       status: 'available',
-      images: (images && images.length > 0) ? images : defaultImages,
+      imageUrl: imageUrl?.trim() || '',
       createdAt: new Date().toISOString()
     };
 
@@ -240,7 +206,7 @@ app.post('/api/items', authMiddleware, (req, res) => {
     res.status(201).json(newItem);
   } catch (err) {
     console.error('Create item error:', err);
-    res.status(500).json({ message: 'Error creating product listing.' });
+    res.status(500).json({ message: 'Failed to create item listing.' });
   }
 });
 
@@ -252,13 +218,13 @@ app.put('/api/items/:id', authMiddleware, (req, res) => {
   }
 
   if (items[idx].sellerId !== req.user.id && req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Unauthorized to modify this listing.' });
+    return res.status(403).json({ message: 'Not authorized to edit this listing.' });
   }
 
-  const allowedUpdates = ['title', 'description', 'category', 'condition', 'price', 'isSwapAvailable', 'swapPreferences', 'status', 'location', 'images'];
-  allowedUpdates.forEach(field => {
-    if (req.body[field] !== undefined) {
-      items[idx][field] = req.body[field];
+  const allowed = ['title', 'description', 'category', 'condition', 'price', 'isSwapAvailable', 'swapPreferences', 'status', 'location', 'imageUrl'];
+  allowed.forEach(f => {
+    if (req.body[f] !== undefined) {
+      items[idx][f] = req.body[f];
     }
   });
 
@@ -274,12 +240,12 @@ app.delete('/api/items/:id', authMiddleware, (req, res) => {
   }
 
   if (item.sellerId !== req.user.id && req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Unauthorized to delete this listing.' });
+    return res.status(403).json({ message: 'Not authorized to delete this listing.' });
   }
 
   items = items.filter(it => it.id !== req.params.id);
   writeData(files.ITEMS_FILE, items);
-  res.json({ message: 'Listing successfully removed.' });
+  res.json({ message: 'Item removed successfully.' });
 });
 
 // ---------------- SWAP REQUEST ROUTES ----------------
@@ -288,7 +254,6 @@ app.get('/api/swaps', authMiddleware, (req, res) => {
   const items = readData(files.ITEMS_FILE, []);
   const users = readData(files.USERS_FILE, []);
 
-  // Filter swaps where user is either requester or seller
   const userSwaps = swaps.filter(s => s.requesterId === req.user.id || s.sellerId === req.user.id);
 
   const populated = userSwaps.map(swap => {
@@ -301,13 +266,12 @@ app.get('/api/swaps', authMiddleware, (req, res) => {
       ...swap,
       targetItem,
       offeredItem,
-      requester: requester ? { id: requester.id, name: requester.name, avatar: requester.avatar } : null,
-      seller: seller ? { id: seller.id, name: seller.name, avatar: seller.avatar } : null,
+      requester: requester ? { id: requester.id, name: requester.name, email: requester.email } : null,
+      seller: seller ? { id: seller.id, name: seller.name, email: seller.email } : null,
       isIncoming: swap.sellerId === req.user.id
     };
   });
 
-  // Sort newest first
   populated.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   res.json(populated);
 });
@@ -316,17 +280,17 @@ app.post('/api/swaps', authMiddleware, (req, res) => {
   try {
     const { targetItemId, offeredItemId, offeredDescription } = req.body;
     if (!targetItemId || (!offeredItemId && !offeredDescription)) {
-      return res.status(400).json({ message: 'Please specify the target item and your offer details.' });
+      return res.status(400).json({ message: 'Please specify the item you want to swap and your offer.' });
     }
 
     const items = readData(files.ITEMS_FILE, []);
     const targetItem = items.find(i => i.id === targetItemId);
     if (!targetItem) {
-      return res.status(404).json({ message: 'Target item not found.' });
+      return res.status(404).json({ message: 'Item not found.' });
     }
 
     if (targetItem.sellerId === req.user.id) {
-      return res.status(400).json({ message: 'You cannot initiate a swap request for your own listing.' });
+      return res.status(400).json({ message: 'You cannot request a swap for your own listing.' });
     }
 
     const swaps = readData(files.SWAPS_FILE, []);
@@ -336,7 +300,7 @@ app.post('/api/swaps', authMiddleware, (req, res) => {
       sellerId: targetItem.sellerId,
       targetItemId,
       offeredItemId: offeredItemId || null,
-      offeredDescription: offeredDescription || '',
+      offeredDescription: offeredDescription?.trim() || '',
       status: 'pending',
       createdAt: new Date().toISOString()
     };
@@ -344,7 +308,7 @@ app.post('/api/swaps', authMiddleware, (req, res) => {
     swaps.unshift(newSwap);
     writeData(files.SWAPS_FILE, swaps);
 
-    // Also auto-create a message thread in chat for this swap negotiation
+    // Also link a message thread
     const messages = readData(files.MESSAGES_FILE, []);
     let conv = messages.find(c => 
       c.itemId === targetItemId && 
@@ -352,7 +316,7 @@ app.post('/api/swaps', authMiddleware, (req, res) => {
       c.participants.includes(targetItem.sellerId)
     );
 
-    const initialText = `[SWAP PROPOSAL]: I would like to swap with you for "${targetItem.title}". ${offeredDescription || 'Please review my offered item.'}`;
+    const initialText = `Swap Request for "${targetItem.title}": ${offeredDescription || 'Proposed item from my inventory.'}`;
 
     if (!conv) {
       conv = {
@@ -383,12 +347,12 @@ app.post('/api/swaps', authMiddleware, (req, res) => {
     res.status(201).json(newSwap);
   } catch (err) {
     console.error('Create swap error:', err);
-    res.status(500).json({ message: 'Error submitting swap offer.' });
+    res.status(500).json({ message: 'Error submitting swap request.' });
   }
 });
 
 app.put('/api/swaps/:id/status', authMiddleware, (req, res) => {
-  const { status } = req.body; // 'accepted', 'rejected', 'completed', 'cancelled'
+  const { status } = req.body;
   const swaps = readData(files.SWAPS_FILE, []);
   const idx = swaps.findIndex(s => s.id === req.params.id);
 
@@ -397,15 +361,13 @@ app.put('/api/swaps/:id/status', authMiddleware, (req, res) => {
   }
 
   const swap = swaps[idx];
-  // Only seller can accept/reject; requester can cancel; either can complete
   if (swap.sellerId !== req.user.id && swap.requesterId !== req.user.id && req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Unauthorized.' });
+    return res.status(403).json({ message: 'Not authorized.' });
   }
 
   swaps[idx].status = status;
   writeData(files.SWAPS_FILE, swaps);
 
-  // If accepted or completed, update item status
   if (status === 'completed') {
     const items = readData(files.ITEMS_FILE, []);
     const targetIdx = items.findIndex(i => i.id === swap.targetItemId);
@@ -440,8 +402,8 @@ app.get('/api/conversations', authMiddleware, (req, res) => {
     return {
       id: conv.id,
       itemId: conv.itemId,
-      item: item ? { id: item.id, title: item.title, price: item.price, image: item.images[0] } : null,
-      otherUser: otherUser ? { id: otherUser.id, name: otherUser.name, avatar: otherUser.avatar } : { name: 'Art Community Member' },
+      item: item ? { id: item.id, title: item.title, price: item.price } : null,
+      otherUser: otherUser ? { id: otherUser.id, name: otherUser.name, email: otherUser.email } : { name: 'User' },
       lastMessage: conv.messages[conv.messages.length - 1],
       updatedAt: conv.updatedAt
     };
@@ -467,7 +429,7 @@ app.get('/api/conversations/:id', authMiddleware, (req, res) => {
 
   res.json({
     ...conv,
-    otherUser: otherUser ? { id: otherUser.id, name: otherUser.name, avatar: otherUser.avatar, location: otherUser.location } : null,
+    otherUser: otherUser ? { id: otherUser.id, name: otherUser.name, email: otherUser.email, location: otherUser.location } : null,
     item
   });
 });
@@ -496,11 +458,11 @@ app.post('/api/conversations', authMiddleware, (req, res) => {
         id: `conv_${Date.now()}`,
         participants: [req.user.id, sellerId],
         itemId,
-        itemTitle: item ? item.title : 'Art Supply Item',
+        itemTitle: item ? item.title : 'Item',
         messages: initialMessage ? [{
           id: `msg_${Date.now()}`,
           senderId: req.user.id,
-          text: initialMessage,
+          text: initialMessage.trim(),
           timestamp: now
         }] : [],
         updatedAt: now
@@ -510,7 +472,7 @@ app.post('/api/conversations', authMiddleware, (req, res) => {
       conv.messages.push({
         id: `msg_${Date.now()}`,
         senderId: req.user.id,
-        text: initialMessage,
+        text: initialMessage.trim(),
         timestamp: now
       });
       conv.updatedAt = now;
@@ -520,7 +482,7 @@ app.post('/api/conversations', authMiddleware, (req, res) => {
     res.status(201).json(conv);
   } catch (err) {
     console.error('Create conversation error:', err);
-    res.status(500).json({ message: 'Error initiating conversation.' });
+    res.status(500).json({ message: 'Error opening chat.' });
   }
 });
 
@@ -551,7 +513,11 @@ app.post('/api/conversations/:id/messages', authMiddleware, (req, res) => {
 });
 
 // ---------------- ADMIN MODULE ROUTES ----------------
-app.get('/api/admin/overview', authMiddleware, adminMiddleware, (req, res) => {
+app.get('/api/admin/overview', authMiddleware, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required.' });
+  }
+
   const users = readData(files.USERS_FILE, []);
   const items = readData(files.ITEMS_FILE, []);
   const swaps = readData(files.SWAPS_FILE, []);
@@ -563,7 +529,7 @@ app.get('/api/admin/overview', authMiddleware, adminMiddleware, (req, res) => {
     activeListings: items.filter(i => i.status === 'available').length,
     totalSwaps: swaps.length,
     completedSwaps: swaps.filter(s => s.status === 'completed').length,
-    totalMessages: messages.reduce((acc, c) => acc + c.messages.length, 0)
+    totalMessages: messages.reduce((acc, c) => acc + (c.messages ? c.messages.length : 0), 0)
   };
 
   const safeUsers = users.map(({ password, ...u }) => u);
@@ -576,7 +542,11 @@ app.get('/api/admin/overview', authMiddleware, adminMiddleware, (req, res) => {
   });
 });
 
-app.patch('/api/admin/users/:id/role', authMiddleware, adminMiddleware, (req, res) => {
+app.patch('/api/admin/users/:id/role', authMiddleware, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required.' });
+  }
+
   const { role } = req.body;
   const users = readData(files.USERS_FILE, []);
   const idx = users.findIndex(u => u.id === req.params.id);
@@ -590,13 +560,13 @@ app.patch('/api/admin/users/:id/role', authMiddleware, adminMiddleware, (req, re
   res.json(userWithoutPass);
 });
 
-// ---------------- STATIC SERVING (FOR DEPLOYMENT / PRODUCTION) ----------------
+// ---------------- STATIC SERVING ----------------
 const clientDist = path.join(__dirname, '../client/dist');
 app.use(express.static(clientDist));
 
 app.get('{*path}', (req, res) => {
   if (req.path.startsWith('/api')) {
-    return res.status(404).json({ message: 'API route not found' });
+    return res.status(404).json({ message: 'API endpoint not found' });
   }
   const indexPath = path.join(clientDist, 'index.html');
   res.sendFile(indexPath);

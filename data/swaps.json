@@ -1,12 +1,1 @@
-[
-  {
-    "id": "swap_1",
-    "requesterId": "usr_marcus",
-    "sellerId": "usr_sarah",
-    "targetItemId": "item_1",
-    "offeredItemId": "item_2",
-    "offeredDescription": "Hi Sarah! I'd love to swap my 8-piece Princeton Velvetouch brush set for your Winsor & Newton Oil set. Can also include a fresh tube of Payne's Grey gouache to balance values!",
-    "status": "pending",
-    "createdAt": "2026-03-08T18:00:00.000Z"
-  }
-]
+[]

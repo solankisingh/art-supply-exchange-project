@@ -1,117 +1,109 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Palette, Repeat, MessageSquare, LayoutDashboard, ShieldCheck, LogIn, LogOut, PlusCircle, User } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path ? 'text-amber-600 font-semibold border-b-2 border-amber-600' : 'text-stone-600 hover:text-stone-900';
+  const isCurrent = (p) => location.pathname === p;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-stone-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo & Brand */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-rose-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-              <Palette className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-stone-900 group-hover:text-amber-600 transition-colors">
-                Art<span className="text-amber-600">Exchange</span>
-              </span>
-              <span className="block text-[10px] tracking-widest uppercase font-medium text-stone-400">Second-hand Materials</span>
-            </div>
+    <nav className="w-full bg-slate-800 text-white shadow-md border-b border-slate-700">
+      <div className="w-full px-4 sm:px-8 py-3 flex items-center justify-between">
+        
+        {/* Brand */}
+        <div className="flex items-center gap-6">
+          <Link to="/" className="text-xl font-bold tracking-wide text-emerald-400 hover:text-emerald-300">
+            ArtSupplyExchange
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link to="/" className={`py-5 transition-colors ${isActive('/')}`}>
-              Marketplace
+          {/* Main Links */}
+          <div className="hidden md:flex items-center gap-4 text-sm font-medium">
+            <Link 
+              to="/" 
+              className={`px-3 py-1.5 rounded ${isCurrent('/') ? 'bg-slate-900 text-emerald-400' : 'hover:bg-slate-700 text-slate-200'}`}
+            >
+              Browse Supplies
             </Link>
+
             {isAuthenticated && (
               <>
-                <Link to="/swaps" className={`py-5 flex items-center gap-1.5 transition-colors ${isActive('/swaps')}`}>
-                  <Repeat className="w-4 h-4 text-emerald-600" />
-                  Swap Hub
+                <Link 
+                  to="/dashboard" 
+                  className={`px-3 py-1.5 rounded ${isCurrent('/dashboard') ? 'bg-slate-900 text-emerald-400' : 'hover:bg-slate-700 text-slate-200'}`}
+                >
+                  My Dashboard
                 </Link>
-                <Link to="/chat" className={`py-5 flex items-center gap-1.5 transition-colors ${isActive('/chat')}`}>
-                  <MessageSquare className="w-4 h-4 text-blue-600" />
+                <Link 
+                  to="/swaps" 
+                  className={`px-3 py-1.5 rounded ${isCurrent('/swaps') ? 'bg-slate-900 text-emerald-400' : 'hover:bg-slate-700 text-slate-200'}`}
+                >
+                  Swap Requests
+                </Link>
+                <Link 
+                  to="/chat" 
+                  className={`px-3 py-1.5 rounded ${isCurrent('/chat') ? 'bg-slate-900 text-emerald-400' : 'hover:bg-slate-700 text-slate-200'}`}
+                >
                   Messages
                 </Link>
-                <Link to="/dashboard" className={`py-5 flex items-center gap-1.5 transition-colors ${isActive('/dashboard')}`}>
-                  <LayoutDashboard className="w-4 h-4 text-amber-600" />
-                  Dashboard
-                </Link>
               </>
             )}
+
             {isAdmin && (
-              <Link to="/admin" className={`py-5 flex items-center gap-1.5 text-rose-600 transition-colors ${isActive('/admin')}`}>
-                <ShieldCheck className="w-4 h-4" />
-                Admin
+              <Link 
+                to="/admin" 
+                className={`px-3 py-1.5 rounded text-amber-300 ${isCurrent('/admin') ? 'bg-slate-900 font-bold' : 'hover:bg-slate-700'}`}
+              >
+                Admin Panel
               </Link>
-            )}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/dashboard?tab=add"
-                  className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium rounded-lg text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition-all"
-                >
-                  <PlusCircle className="w-4 h-4" />
-                  List Material
-                </Link>
-
-                <div className="flex items-center gap-3 pl-2 border-l border-stone-200">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={user?.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${user?.name}`}
-                      alt={user?.name}
-                      className="w-8 h-8 rounded-full border border-stone-200 object-cover"
-                    />
-                    <div className="hidden lg:block text-left">
-                      <div className="text-xs font-semibold text-stone-800 line-clamp-1">{user?.name}</div>
-                      <div className="text-[10px] text-stone-500 capitalize">{user?.role}</div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      navigate('/login');
-                    }}
-                    title="Log out"
-                    className="p-1.5 text-stone-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-stone-700 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center gap-1 px-3.5 py-1.5 text-sm font-medium rounded-lg text-white bg-stone-900 hover:bg-stone-800 shadow-sm transition-all"
-                >
-                  Join Community
-                </Link>
-              </div>
             )}
           </div>
         </div>
+
+        {/* Right side user actions */}
+        <div className="flex items-center gap-3">
+          {isAuthenticated ? (
+            <div className="flex items-center gap-4 text-sm">
+              <span className="hidden sm:inline-block text-slate-300">
+                Hi, <strong className="text-white">{user?.name}</strong> {isAdmin && <span className="text-xs bg-amber-500 text-black px-1.5 py-0.5 rounded ml-1 font-bold">Admin</span>}
+              </span>
+              <Link 
+                to="/dashboard?action=new" 
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded font-medium text-xs sm:text-sm"
+              >
+                + Post Supply
+              </Link>
+              <button 
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+                className="bg-rose-700 hover:bg-rose-600 text-white px-3 py-1.5 rounded text-xs sm:text-sm"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-sm">
+              <Link 
+                to="/login" 
+                className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-1.5 rounded"
+              >
+                Login
+              </Link>
+              <Link 
+                to="/register" 
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded font-medium"
+              >
+                Register
+              </Link>
+            </div>
+          )}
+        </div>
+
       </div>
-    </header>
+    </nav>
   );
 }

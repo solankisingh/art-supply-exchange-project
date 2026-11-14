@@ -14,7 +14,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
-    return <div className="p-12 text-center text-stone-400">Verifying session...</div>;
+    return <div className="p-8 text-center text-slate-600">Checking session...</div>;
   }
 
   if (!user) {
@@ -30,17 +30,17 @@ function ProtectedRoute({ children, adminOnly = false }) {
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div className="w-full min-h-screen flex flex-col bg-slate-100 text-slate-800">
       <Navbar />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+      {/* FULL SCREEN FLUID CONTAINER */}
+      <main className="w-full flex-1 px-4 sm:px-8 py-6">
         <Routes>
           <Route path="/" element={<Marketplace />} />
           <Route path="/item/:id" element={<ProductDetail />} />
           <Route path="/login" element={<AuthPage isRegister={false} />} />
           <Route path="/register" element={<AuthPage isRegister={true} />} />
 
-          {/* Protected Routes */}
           <Route
             path="/dashboard"
             element={
@@ -65,8 +65,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Admin Protected Route */}
           <Route
             path="/admin"
             element={
@@ -76,18 +74,12 @@ export default function App() {
             }
           />
 
-          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
-      <footer className="bg-white border-t border-stone-200 py-8 text-center text-xs text-stone-500">
-        <div className="max-w-7xl mx-auto px-4 space-y-2">
-          <p className="font-semibold text-stone-700">Art Supply Exchange & Second-hand Material Marketplace</p>
-          <p className="max-w-md mx-auto text-stone-400">
-            Encouraging a circular economy, sustainability, and creative accessibility for art students, educators, and makers everywhere.
-          </p>
-        </div>
+      <footer className="w-full bg-slate-800 text-slate-400 text-xs py-4 px-6 text-center border-t border-slate-700">
+        Art Supply Exchange & Second-Hand Marketplace &bull; Full-Screen Web App
       </footer>
     </div>
   );

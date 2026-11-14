@@ -44,3 +44,4 @@ export const files = {
   SWAPS_FILE,
   MESSAGES_FILE
 };
+

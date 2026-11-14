@@ -60,3 +60,4 @@ The server will start at: `http://localhost:5000`
 | **Admin** | `admin@artexchange.org` | `password123` |
 | **Artist User** | `sarah@studioart.com` | `password123` |
 | **Artist User** | `marcus@pleinair.org` | `password123` |
+
