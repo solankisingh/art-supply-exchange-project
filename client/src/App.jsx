@@ -14,7 +14,7 @@ function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading, isAdmin } = useAuth();
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-600">Checking session...</div>;
+    return <div className="p-8 text-center text-slate-600 dark:text-slate-300">Checking session...</div>;
   }
 
   if (!user) {
@@ -33,10 +33,10 @@ export default function App() {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-slate-100 text-slate-800">
+    <div className="w-full min-h-screen flex flex-col bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <Navbar />
 
-      {/* When on Auth pages, remove all container padding and constraints so background covers 100% */}
+      {/* Main Container */}
       <main className={`w-full flex-1 ${isAuthPage ? 'p-0 flex flex-col' : 'px-4 sm:px-8 py-6'}`}>
         <Routes>
           <Route path="/" element={<Marketplace />} />
@@ -81,7 +81,7 @@ export default function App() {
         </Routes>
       </main>
 
-      <footer className="w-full bg-slate-800 text-slate-400 text-xs py-4 px-6 text-center border-t border-slate-700">
+      <footer className="w-full bg-slate-800 dark:bg-slate-950 text-slate-400 dark:text-slate-500 text-xs py-4 px-6 text-center border-t border-slate-700 dark:border-slate-800 transition-colors duration-200">
         Art Supply Exchange & Second-Hand Marketplace &bull; Full-Screen Web App
       </footer>
     </div>

@@ -57,7 +57,7 @@ export default function Marketplace() {
 
   // Automatic Background Slideshow with 5-second interval and reduced motion check
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
     const timer = setInterval(() => {
@@ -100,16 +100,17 @@ export default function Marketplace() {
       {/* =========================================================================
           HERO BANNER WITH AUTOMATIC BACKGROUND IMAGE SLIDESHOW
       ========================================================================== */}
-      <div className="w-full relative rounded-2xl overflow-hidden shadow-xl border border-slate-700/60 h-[400px] sm:h-[420px] lg:h-[450px] flex items-center justify-center bg-slate-900">
-
+      <div className="w-full relative rounded-2xl overflow-hidden shadow-xl border border-slate-700/60 dark:border-slate-800 h-[400px] sm:h-[420px] lg:h-[450px] flex items-center justify-center bg-slate-900">
+        
         {/* Layer 1: Background Images with 1-second crossfade */}
         {SLIDESHOW_IMAGES.map((slide, index) => (
           <img
             key={slide.id}
             src={slide.url}
             alt={slide.title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out select-none pointer-events-none ${index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out select-none pointer-events-none ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
           />
         ))}
 
@@ -118,7 +119,7 @@ export default function Marketplace() {
 
         {/* Layer 3: Completely Stationary Centered Foreground Content */}
         <div className="relative z-10 w-full max-w-4xl px-4 sm:px-8 py-6 flex flex-col items-center justify-center text-center">
-
+          
           {/* Art Palette Icon with small decorative accents */}
           <div className="relative mb-3 flex items-center justify-center">
             <span className="text-emerald-400 text-lg font-bold select-none absolute -left-5 -top-1">
@@ -188,52 +189,52 @@ export default function Marketplace() {
       {/* =========================================================================
           SEARCH AND FILTERS BAR
       ========================================================================== */}
-      <div className="w-full bg-white p-4 rounded border border-slate-300 shadow-sm space-y-3">
+      <div className="w-full bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm space-y-3 transition-colors duration-200">
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by material title, brand, or details..."
-            className="flex-1 border border-slate-300 rounded px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+            className="flex-1 border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700/70 placeholder-slate-400 dark:placeholder-slate-400 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-400 focus:ring-1 focus:ring-emerald-600 dark:focus:ring-emerald-400 transition-colors"
           />
           <button
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded text-sm font-medium transition-colors"
+            className="bg-emerald-600 hover:bg-emerald-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white px-5 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors cursor-pointer"
           >
             Search
           </button>
         </form>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs pt-2 border-t border-slate-200">
+        <div className="flex flex-wrap items-center gap-4 text-xs pt-2 border-t border-slate-200 dark:border-slate-700">
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600">Category:</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-300">Category:</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="border border-slate-300 rounded px-2 py-1 bg-white text-slate-700 focus:outline-none focus:border-emerald-600"
+              className="border border-slate-300 dark:border-slate-600 rounded-lg px-2.5 py-1 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-400 transition-colors cursor-pointer"
             >
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600">Condition:</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-300">Condition:</span>
             <select
               value={condition}
               onChange={(e) => setCondition(e.target.value)}
-              className="border border-slate-300 rounded px-2 py-1 bg-white text-slate-700 focus:outline-none focus:border-emerald-600"
+              className="border border-slate-300 dark:border-slate-600 rounded-lg px-2.5 py-1 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-400 transition-colors cursor-pointer"
             >
               {CONDITIONS.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-600">Sort:</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-300">Sort:</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="border border-slate-300 rounded px-2 py-1 bg-white text-slate-700 focus:outline-none focus:border-emerald-600"
+              className="border border-slate-300 dark:border-slate-600 rounded-lg px-2.5 py-1 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-100 focus:outline-none focus:border-emerald-600 dark:focus:border-emerald-400 transition-colors cursor-pointer"
             >
               <option value="newest">Newest First</option>
               <option value="price_asc">Price: Low to High</option>
@@ -241,7 +242,7 @@ export default function Marketplace() {
             </select>
           </div>
 
-          <span className="text-slate-500 ml-auto font-medium">
+          <span className="text-slate-500 dark:text-slate-400 ml-auto font-medium">
             Found {items.length} {items.length === 1 ? 'item' : 'items'}
           </span>
         </div>
@@ -251,19 +252,19 @@ export default function Marketplace() {
           GRID OF ITEMS
       ========================================================================== */}
       {loading ? (
-        <div className="w-full text-center py-12 text-slate-500 text-sm bg-white rounded border border-slate-200">
+        <div className="w-full text-center py-12 text-slate-500 dark:text-slate-400 text-sm bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors">
           Loading marketplace items...
         </div>
       ) : items.length === 0 ? (
-        <div className="w-full text-center py-16 bg-white rounded border border-slate-300 p-6 space-y-2">
-          <h3 className="text-base font-bold text-slate-700">No Art Supplies Listed Yet</h3>
-          <p className="text-sm text-slate-500 max-w-md mx-auto">
+        <div className="w-full text-center py-16 bg-white dark:bg-slate-800 rounded-xl border border-slate-300 dark:border-slate-700 p-6 space-y-2 transition-colors">
+          <h3 className="text-base font-bold text-slate-700 dark:text-slate-200">No Art Supplies Listed Yet</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
             Be the first to list art materials! Login or register to post unused paints, brushes, canvases, or tools.
           </p>
           <div className="pt-3">
             <Link
               to="/dashboard?action=new"
-              className="inline-block bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-4 py-2 rounded font-medium"
+              className="inline-block bg-emerald-600 hover:bg-emerald-500 text-white text-sm px-4 py-2 rounded-lg font-medium shadow-sm transition-colors"
             >
               Post First Supply
             </Link>
@@ -274,11 +275,11 @@ export default function Marketplace() {
           {items.map(item => (
             <div
               key={item.id}
-              className="bg-white border border-slate-300 rounded shadow-sm hover:shadow transition-shadow flex flex-col justify-between overflow-hidden"
+              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between overflow-hidden"
             >
               <div>
                 {/* Image or Placeholder Box */}
-                <div className="w-full h-44 bg-slate-200 relative flex items-center justify-center overflow-hidden">
+                <div className="w-full h-44 bg-slate-200 dark:bg-slate-700 relative flex items-center justify-center overflow-hidden">
                   {item.imageUrl ? (
                     <img
                       src={item.imageUrl}
@@ -289,40 +290,40 @@ export default function Marketplace() {
                       }}
                     />
                   ) : (
-                    <span className="text-xs text-slate-500 font-medium">[ No Image Provided ]</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">[ No Image Provided ]</span>
                   )}
                   {item.isSwapAvailable && (
-                    <span className="absolute top-2 right-2 bg-emerald-700 text-white text-[11px] px-2 py-0.5 rounded font-bold">
+                    <span className="absolute top-2 right-2 bg-emerald-700 text-white text-[11px] px-2 py-0.5 rounded font-bold shadow-sm">
                       Open to Swap
                     </span>
                   )}
                 </div>
 
                 <div className="p-3.5 space-y-1.5">
-                  <div className="text-[11px] text-emerald-700 font-bold uppercase">{item.category}</div>
-                  <h3 className="font-bold text-slate-900 text-sm line-clamp-1">{item.title}</h3>
-                  <p className="text-xs text-slate-600 line-clamp-2">{item.description}</p>
+                  <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold uppercase">{item.category}</div>
+                  <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm line-clamp-1">{item.title}</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">{item.description}</p>
                 </div>
               </div>
 
-              <div className="p-3.5 pt-0 border-t border-slate-100 mt-2 space-y-2">
+              <div className="p-3.5 pt-0 border-t border-slate-100 dark:border-slate-700/60 mt-2 space-y-2">
                 <div className="flex items-center justify-between text-xs pt-2">
-                  <span className="text-base font-bold text-slate-900">
+                  <span className="text-base font-bold text-slate-900 dark:text-emerald-400">
                     ${Number(item.price).toFixed(2)}
                   </span>
-                  <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">
+                  <span className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600">
                     {item.condition}
                   </span>
                 </div>
 
-                <div className="text-xs text-slate-500 flex justify-between">
+                <div className="text-xs text-slate-500 dark:text-slate-400 flex justify-between">
                   <span>Location: {item.location}</span>
                   <span>Seller: {item.seller?.name || 'Artist'}</span>
                 </div>
 
                 <Link
                   to={`/item/${item.id}`}
-                  className="block w-full text-center bg-slate-800 hover:bg-slate-700 text-white text-xs py-2 rounded font-medium mt-1"
+                  className="block w-full text-center bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs py-2 rounded-lg font-medium shadow-sm transition-colors mt-1"
                 >
                   View Details & Contact
                 </Link>

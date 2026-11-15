@@ -62,59 +62,59 @@ export default function AdminPanel() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500 text-xs">Loading Admin Panel...</div>;
+    return <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs">Loading Admin Panel...</div>;
   }
 
   if (!data) {
-    return <div className="p-8 text-center text-red-600 text-sm">Access Denied: Admins Only.</div>;
+    return <div className="p-8 text-center text-red-600 dark:text-red-400 text-sm">Access Denied: Admins Only.</div>;
   }
 
   return (
     <div className="w-full space-y-6">
-      <div className="w-full bg-slate-800 text-white p-4 rounded shadow">
+      <div className="w-full bg-slate-800 dark:bg-slate-950 text-white p-4 rounded-xl shadow border border-slate-700 dark:border-slate-800">
         <h2 className="text-xl font-bold">Admin Management Panel</h2>
-        <p className="text-xs text-slate-300">
+        <p className="text-xs text-slate-300 dark:text-slate-400 mt-0.5">
           Platform statistics, registered users list, and listing moderation.
         </p>
       </div>
 
       {/* STATS OVERVIEW */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Total Users</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.totalUsers}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Total Users</span>
+          <span className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.stats.totalUsers}</span>
         </div>
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Total Items</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.totalItems}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Total Items</span>
+          <span className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.stats.totalItems}</span>
         </div>
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Active Items</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.activeListings}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Active Items</span>
+          <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{data.stats.activeListings}</span>
         </div>
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Swaps Total</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.totalSwaps}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Swaps Total</span>
+          <span className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.stats.totalSwaps}</span>
         </div>
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Swaps Done</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.completedSwaps}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Swaps Done</span>
+          <span className="text-xl font-bold text-teal-600 dark:text-teal-400">{data.stats.completedSwaps}</span>
         </div>
-        <div className="bg-white border border-slate-300 p-3 rounded text-center">
-          <span className="text-slate-500 block uppercase font-semibold">Messages</span>
-          <span className="text-xl font-bold text-slate-800">{data.stats.totalMessages}</span>
+        <div className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-3.5 rounded-xl text-center shadow-sm transition-colors">
+          <span className="text-slate-500 dark:text-slate-400 block uppercase font-semibold text-[10px]">Messages</span>
+          <span className="text-xl font-bold text-slate-800 dark:text-slate-100">{data.stats.totalMessages}</span>
         </div>
       </div>
 
       {/* USERS TABLE */}
-      <div className="w-full bg-white border border-slate-300 rounded shadow-sm p-4 space-y-3">
-        <h3 className="font-bold text-slate-800 text-sm border-b border-slate-200 pb-2">
+      <div className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm p-4 space-y-3 transition-colors">
+        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm border-b border-slate-200 dark:border-slate-700 pb-2">
           Registered Users ({data.users.length})
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100 border-b border-slate-300 text-slate-600 uppercase">
+              <tr className="bg-slate-100 dark:bg-slate-750 border-b border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
                 <th className="p-2.5">Name</th>
                 <th className="p-2.5">Email</th>
                 <th className="p-2.5">Location</th>
@@ -122,18 +122,26 @@ export default function AdminPanel() {
                 <th className="p-2.5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {data.users.map(u => (
-                <tr key={u.id} className="hover:bg-slate-50">
-                  <td className="p-2.5 font-bold text-slate-800">{u.name}</td>
-                  <td className="p-2.5 text-slate-600">{u.email}</td>
-                  <td className="p-2.5 text-slate-500">{u.location}</td>
-                  <td className="p-2.5 font-semibold text-slate-700 uppercase">{u.role}</td>
+                <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="p-2.5 font-bold text-slate-800 dark:text-slate-100">{u.name}</td>
+                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{u.email}</td>
+                  <td className="p-2.5 text-slate-500 dark:text-slate-400">{u.location}</td>
+                  <td className="p-2.5 font-semibold text-slate-700 dark:text-slate-300 uppercase">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      u.role === 'admin' 
+                        ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700' 
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                    }`}>
+                      {u.role}
+                    </span>
+                  </td>
                   <td className="p-2.5 text-right">
                     {u.id !== user.id && (
                       <button
                         onClick={() => toggleUserRole(u.id, u.role)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-2 py-1 rounded text-[11px]"
+                        className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
                       >
                         Make {u.role === 'admin' ? 'User' : 'Admin'}
                       </button>
@@ -147,14 +155,14 @@ export default function AdminPanel() {
       </div>
 
       {/* LISTINGS MODERATION TABLE */}
-      <div className="w-full bg-white border border-slate-300 rounded shadow-sm p-4 space-y-3">
-        <h3 className="font-bold text-slate-800 text-sm border-b border-slate-200 pb-2">
+      <div className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm p-4 space-y-3 transition-colors">
+        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm border-b border-slate-200 dark:border-slate-700 pb-2">
           Listing Moderation ({data.items.length})
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100 border-b border-slate-300 text-slate-600 uppercase">
+              <tr className="bg-slate-100 dark:bg-slate-750 border-b border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
                 <th className="p-2.5">Title</th>
                 <th className="p-2.5">Category</th>
                 <th className="p-2.5">Condition</th>
@@ -163,18 +171,18 @@ export default function AdminPanel() {
                 <th className="p-2.5 text-right">Moderate</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {data.items.map(item => (
-                <tr key={item.id} className="hover:bg-slate-50">
-                  <td className="p-2.5 font-semibold text-slate-800">{item.title}</td>
-                  <td className="p-2.5 text-slate-600">{item.category}</td>
-                  <td className="p-2.5 text-slate-600">{item.condition}</td>
-                  <td className="p-2.5 font-bold text-slate-900">${Number(item.price).toFixed(2)}</td>
-                  <td className="p-2.5 uppercase font-medium text-slate-600">{item.status}</td>
+                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-100">{item.title}</td>
+                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{item.category}</td>
+                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{item.condition}</td>
+                  <td className="p-2.5 font-bold text-slate-900 dark:text-emerald-400">${Number(item.price).toFixed(2)}</td>
+                  <td className="p-2.5 uppercase font-medium text-slate-600 dark:text-slate-400">{item.status}</td>
                   <td className="p-2.5 text-right">
                     <button
                       onClick={() => removeListing(item.id)}
-                      className="bg-rose-100 hover:bg-rose-200 text-rose-700 px-2 py-1 rounded text-[11px]"
+                      className="bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
                     >
                       Delete
                     </button>
