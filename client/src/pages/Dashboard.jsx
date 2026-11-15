@@ -173,36 +173,36 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="w-full overflow-x-auto">
+            <div className="w-full overflow-x-auto rounded-lg">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-750 border-b border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
-                    <th className="p-2.5">Title</th>
-                    <th className="p-2.5">Category</th>
-                    <th className="p-2.5">Price</th>
-                    <th className="p-2.5">Swap Eligible</th>
-                    <th className="p-2.5">Status</th>
-                    <th className="p-2.5 text-right">Actions</th>
+                  <tr className="bg-slate-100 dark:bg-slate-700/80 border-b border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-200 uppercase font-semibold tracking-wider">
+                    <th className="p-3">Title</th>
+                    <th className="p-3">Category</th>
+                    <th className="p-3">Price</th>
+                    <th className="p-3">Swap Eligible</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                   {items.map(item => (
-                    <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                      <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-100">
+                    <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors">
+                      <td className="p-3 font-semibold text-slate-800 dark:text-slate-100">
                         <Link to={`/item/${item.id}`} className="hover:underline text-emerald-600 dark:text-emerald-400">
                           {item.title}
                         </Link>
                       </td>
-                      <td className="p-2.5 text-slate-600 dark:text-slate-300">{item.category}</td>
-                      <td className="p-2.5 font-bold text-slate-900 dark:text-emerald-400">${Number(item.price).toFixed(2)}</td>
-                      <td className="p-2.5">
+                      <td className="p-3 text-slate-600 dark:text-slate-300">{item.category}</td>
+                      <td className="p-3 font-bold text-slate-900 dark:text-emerald-400">${Number(item.price).toFixed(2)}</td>
+                      <td className="p-3">
                         {item.isSwapAvailable ? (
                           <span className="text-emerald-700 dark:text-emerald-400 font-bold">Yes</span>
                         ) : (
                           <span className="text-slate-400 dark:text-slate-500">No</span>
                         )}
                       </td>
-                      <td className="p-2.5">
+                      <td className="p-3">
                         <select
                           value={item.status}
                           onChange={(e) => updateStatus(item.id, e.target.value)}
@@ -214,7 +214,7 @@ export default function Dashboard() {
                           <option value="swapped">swapped</option>
                         </select>
                       </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-3 text-right">
                         <button
                           onClick={() => deleteItem(item.id)}
                           className="bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 px-2 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"

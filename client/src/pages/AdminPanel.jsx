@@ -111,24 +111,24 @@ export default function AdminPanel() {
         <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm border-b border-slate-200 dark:border-slate-700 pb-2">
           Registered Users ({data.users.length})
         </h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100 dark:bg-slate-750 border-b border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
-                <th className="p-2.5">Name</th>
-                <th className="p-2.5">Email</th>
-                <th className="p-2.5">Location</th>
-                <th className="p-2.5">Role</th>
-                <th className="p-2.5 text-right">Action</th>
+              <tr className="bg-slate-100 dark:bg-slate-700/80 border-b border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-200 uppercase font-semibold tracking-wider">
+                <th className="p-3">Name</th>
+                <th className="p-3">Email</th>
+                <th className="p-3">Location</th>
+                <th className="p-3">Role</th>
+                <th className="p-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {data.users.map(u => (
-                <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <td className="p-2.5 font-bold text-slate-800 dark:text-slate-100">{u.name}</td>
-                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{u.email}</td>
-                  <td className="p-2.5 text-slate-500 dark:text-slate-400">{u.location}</td>
-                  <td className="p-2.5 font-semibold text-slate-700 dark:text-slate-300 uppercase">
+                <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors">
+                  <td className="p-3 font-bold text-slate-800 dark:text-slate-100">{u.name}</td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300">{u.email}</td>
+                  <td className="p-3 text-slate-500 dark:text-slate-400">{u.location}</td>
+                  <td className="p-3 font-semibold text-slate-700 dark:text-slate-300 uppercase">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       u.role === 'admin' 
                         ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700' 
@@ -137,7 +137,7 @@ export default function AdminPanel() {
                       {u.role}
                     </span>
                   </td>
-                  <td className="p-2.5 text-right">
+                  <td className="p-3 text-right">
                     {u.id !== user.id && (
                       <button
                         onClick={() => toggleUserRole(u.id, u.role)}
@@ -159,27 +159,27 @@ export default function AdminPanel() {
         <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm border-b border-slate-200 dark:border-slate-700 pb-2">
           Listing Moderation ({data.items.length})
         </h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100 dark:bg-slate-750 border-b border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 uppercase">
-                <th className="p-2.5">Title</th>
-                <th className="p-2.5">Category</th>
-                <th className="p-2.5">Condition</th>
-                <th className="p-2.5">Price</th>
-                <th className="p-2.5">Status</th>
-                <th className="p-2.5 text-right">Moderate</th>
+              <tr className="bg-slate-100 dark:bg-slate-700/80 border-b border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-200 uppercase font-semibold tracking-wider">
+                <th className="p-3">Title</th>
+                <th className="p-3">Category</th>
+                <th className="p-3">Condition</th>
+                <th className="p-3">Price</th>
+                <th className="p-3">Status</th>
+                <th className="p-3 text-right">Moderate</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {data.items.map(item => (
-                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <td className="p-2.5 font-semibold text-slate-800 dark:text-slate-100">{item.title}</td>
-                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{item.category}</td>
-                  <td className="p-2.5 text-slate-600 dark:text-slate-300">{item.condition}</td>
-                  <td className="p-2.5 font-bold text-slate-900 dark:text-emerald-400">${Number(item.price).toFixed(2)}</td>
-                  <td className="p-2.5 uppercase font-medium text-slate-600 dark:text-slate-400">{item.status}</td>
-                  <td className="p-2.5 text-right">
+                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors">
+                  <td className="p-3 font-semibold text-slate-800 dark:text-slate-100">{item.title}</td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300">{item.category}</td>
+                  <td className="p-3 text-slate-600 dark:text-slate-300">{item.condition}</td>
+                  <td className="p-3 font-bold text-slate-900 dark:text-emerald-400">${Number(item.price).toFixed(2)}</td>
+                  <td className="p-3 uppercase font-medium text-slate-600 dark:text-slate-400">{item.status}</td>
+                  <td className="p-3 text-right">
                     <button
                       onClick={() => removeListing(item.id)}
                       className="bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-700 dark:text-rose-300 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
