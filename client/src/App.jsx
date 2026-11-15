@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Marketplace from './pages/Marketplace';
 import ProductDetail from './pages/ProductDetail';
 import Dashboard from './pages/Dashboard';
@@ -81,9 +82,8 @@ export default function App() {
         </Routes>
       </main>
 
-      <footer className="w-full bg-slate-800 dark:bg-slate-950 text-slate-400 dark:text-slate-500 text-xs py-4 px-6 text-center border-t border-slate-700 dark:border-slate-800 transition-colors duration-200">
-        Art Supply Exchange & Second-Hand Marketplace &bull; Full-Screen Web App
-      </footer>
+      {/* Professional Footer */}
+      <Footer />
     </div>
   );
 }
