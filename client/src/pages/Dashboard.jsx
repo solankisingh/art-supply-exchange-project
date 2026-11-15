@@ -233,7 +233,7 @@ export default function Dashboard() {
 
       {/* TAB 2: POST NEW ITEM */}
       {tab === 'new' && (
-        <div className="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm p-6 max-w-3xl space-y-4 transition-colors">
+        <div className="w-full max-w-3xl mx-auto bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm p-6 space-y-4 transition-colors">
           <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base border-b border-slate-200 dark:border-slate-700 pb-2">
             Post an Art Supply Listing
           </h3>
@@ -314,26 +314,26 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="p-3 bg-slate-50 dark:bg-slate-750 border border-slate-300 dark:border-slate-700 rounded-lg space-y-2">
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-700/60 border border-slate-300 dark:border-slate-600 rounded-lg space-y-2 transition-colors">
               <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-800 dark:text-slate-200">
                 <input
                   type="checkbox"
                   checked={isSwapAvailable}
                   onChange={(e) => setIsSwapAvailable(e.target.checked)}
-                  className="w-4 h-4 text-emerald-600 rounded border-slate-300 dark:border-slate-600"
+                  className="w-4 h-4 text-emerald-600 rounded border-slate-300 dark:border-slate-500"
                 />
                 Accept swap / exchange offers for this item
               </label>
 
               {isSwapAvailable && (
-                <div>
-                  <label className="block text-slate-600 dark:text-slate-400 mb-1">What would you like to swap for?</label>
+                <div className="pt-1">
+                  <label className="block text-slate-600 dark:text-slate-300 font-medium mb-1">What would you like to swap for?</label>
                   <input
                     type="text"
                     value={swapPreferences}
                     onChange={(e) => setSwapPreferences(e.target.value)}
                     placeholder="e.g. Looking for oil paints, sketchbooks, or charcoal"
-                    className="w-full border border-slate-300 dark:border-slate-600 rounded-lg p-2.5 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-600"
+                    className="w-full border border-slate-300 dark:border-slate-500 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-600"
                   />
                 </div>
               )}
