@@ -73,28 +73,7 @@ export default function Footer() {
           </svg>
         </div>
 
-        {/* Bottom-Left Corner: Subtle white line-art illustration of brushes in jar & sketchbook */}
-        <div className="absolute bottom-2 left-6 pointer-events-none opacity-25 hidden sm:block z-0">
-          <svg width="140" height="90" viewBox="0 0 140 90" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round">
-            {/* Brushes jar */}
-            <rect x="15" y="45" width="28" height="40" rx="3" stroke="white" />
-            <line x1="22" y1="45" x2="10" y2="10" stroke="white" />
-            <polygon points="10,10 7,6 12,5" fill="white" />
-            <line x1="29" y1="45" x2="29" y2="5" stroke="white" />
-            <polygon points="29,5 26,2 32,2" fill="white" />
-            <line x1="36" y1="45" x2="48" y2="15" stroke="white" />
-            <polygon points="48,15 52,12 49,18" fill="white" />
-            {/* Paint tube */}
-            <rect x="52" y="55" width="18" height="30" rx="2" stroke="white" />
-            <rect x="56" y="50" width="10" height="5" stroke="white" />
-            {/* Sketchbook spine */}
-            <path d="M78,65 Q95,60 115,65 L115,88 Q95,83 78,88 Z" stroke="white" />
-            <circle cx="82" cy="68" r="1.5" fill="white" />
-            <circle cx="82" cy="74" r="1.5" fill="white" />
-            <circle cx="82" cy="80" r="1.5" fill="white" />
-            <circle cx="82" cy="86" r="1.5" fill="white" />
-          </svg>
-        </div>
+
 
         {/* =========================================================================
             MAIN 5-COLUMN FULL-WIDTH CONTENT GRID (Occupies ~95% screen width)
