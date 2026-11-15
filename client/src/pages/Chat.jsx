@@ -131,10 +131,10 @@ export default function Chat() {
       </div>
 
       {/* Right chat message area */}
-      <div className="flex-1 flex flex-col justify-between bg-white dark:bg-slate-850 transition-colors">
+      <div className="flex-1 flex flex-col justify-between bg-white dark:bg-slate-800 transition-colors">
         {activeConv ? (
           <>
-            <div className="p-3.5 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-between text-xs text-slate-800 dark:text-slate-200">
+            <div className="p-3.5 border-b border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-750 flex items-center justify-between text-xs text-slate-800 dark:text-slate-200">
               <div>
                 <strong className="text-slate-900 dark:text-white">Chat with:</strong> {activeConv.otherUser?.name || 'User'} ({activeConv.otherUser?.email})
               </div>
@@ -146,7 +146,7 @@ export default function Chat() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3">
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-white dark:bg-slate-850">
               {activeConv.messages?.map(m => {
                 const isMe = m.senderId === user.id;
                 return (
@@ -184,9 +184,9 @@ export default function Chat() {
             </form>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-slate-400 dark:text-slate-300 text-xs p-6 text-center space-y-1">
-            <span className="font-semibold text-slate-600 dark:text-slate-200 text-sm">No Conversation Selected</span>
-            <p>Select an artist from the left pane to view messages or negotiate a trade.</p>
+          <div className="flex-1 flex flex-col items-center justify-center text-slate-400 dark:text-slate-300 text-xs p-6 text-center space-y-1 bg-white dark:bg-slate-800/90">
+            <span className="font-semibold text-slate-700 dark:text-slate-100 text-sm">No Conversation Selected</span>
+            <p className="text-slate-500 dark:text-slate-400">Select an artist from the left pane to view messages or negotiate a trade.</p>
           </div>
         )}
       </div>
